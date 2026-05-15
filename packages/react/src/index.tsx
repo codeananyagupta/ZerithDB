@@ -29,10 +29,22 @@ export const useZerith = () => {
   }
   return context;
 };
-
+ 
 /**
- * Reactive hook to query a collection.
+ * Reactive hook for querying a collection with real-time updates.
+ *
  * Automatically updates when local or remote (P2P) changes occur.
+ *
+ * @template T - Type of collection documents.
+ * @param {string} collectionName - Name of the collection to query.
+ * @returns {{
+ *   data: T[];
+ *   loading: boolean;
+ *   error: Error | null;
+ * }} Query state containing data, loading status, and errors.
+ *
+ * @example
+ * const { data, loading } = useQuery<User>("users");
  */
 export function useQuery<T = any>(collectionName: string) {
   const db = useZerith() as any;
