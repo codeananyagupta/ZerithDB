@@ -8,7 +8,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/Zerith-Labs/ZerithDB/actions/workflows/ci.yml/badge.svg)](https://github.com/Zerith-Labs/ZerithDB/actions/workflows/ci.yml)
-[![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
+[![Status](https://img.shields.io/badge/status-alpha-orange.svg)](https://github.com/Zerith-Labs/ZerithDB)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Us-7289da?logo=discord&logoColor=white)](https://discord.gg/MhvuDvzWfF)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -17,6 +17,22 @@
 [**Discord**](https://discord.gg/MhvuDvzWfF) · [**Roadmap**](ROADMAP.md)
 
 </div>
+
+## Ecosystem
+
+ZerithDB provides multiple packages for building collaborative and offline-first applications.
+
+| Package | Installation | Description |
+| --- | --- | --- |
+| `zerithdb-sdk` | `npm install zerithdb-sdk` | Main developer-facing SDK |
+| `zerithdb-db` | `npm install zerithdb-db` | IndexedDB adapter |
+| `zerithdb-sync` | `npm install zerithdb-sync` | CRDT sync engine |
+| `zerithdb-network` | `npm install zerithdb-network` | WebRTC networking layer |
+| `zerithdb-auth` | `npm install zerithdb-auth` | Authentication utilities |
+| `zerithdb-core` | `npm install zerithdb-core` | Shared internal utilities |
+| `zerithdb-cli` | `npm install -g zerithdb-cli` | CLI tooling |
+| `zerithdb-react` | `npm install zerithdb-react` | React integration package |
+| `zerithdb-python` | `pip install zerithdb-python` | Python SDK support |
 
 ---
 
