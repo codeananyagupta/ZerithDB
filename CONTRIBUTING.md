@@ -193,3 +193,4 @@ Maintainers handle the actual npm publish via the automated Release PR workflow.
 ---
 
 _Every line you write, every test you add, every doc you improve — it matters._
+
