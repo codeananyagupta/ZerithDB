@@ -62,7 +62,7 @@ pnpm --filter zerithdb-sdk dev
   [`good-first-issue`](https://github.com/Zerith-Labs/ZerithDB/issues?q=label%3Agood-first-issue) or
   [`help-wanted`](https://github.com/Zerith-Labs/ZerithDB/issues?q=label%3Ahelp-wanted).
 - For features, open a Discussion before writing code.
-- Comment "I'll work on this" to claim an issue.
+- Comment `/assign` to automatically claim an issue. Use `/unassign` if you can no longer work on it.
 
 ### 2. Branch Naming
 
@@ -193,4 +193,3 @@ Maintainers handle the actual npm publish via the automated Release PR workflow.
 ---
 
 _Every line you write, every test you add, every doc you improve — it matters._
-
