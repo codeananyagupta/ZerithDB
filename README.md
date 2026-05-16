@@ -22,17 +22,17 @@
 
 ZerithDB provides multiple packages for building collaborative and offline-first applications.
 
-| Package | Installation | Description |
-| --- | --- | --- |
-| `zerithdb-sdk` | `npm install zerithdb-sdk` | Main developer-facing SDK |
-| `zerithdb-db` | `npm install zerithdb-db` | IndexedDB adapter |
-| `zerithdb-sync` | `npm install zerithdb-sync` | CRDT sync engine |
-| `zerithdb-network` | `npm install zerithdb-network` | WebRTC networking layer |
-| `zerithdb-auth` | `npm install zerithdb-auth` | Authentication utilities |
-| `zerithdb-core` | `npm install zerithdb-core` | Shared internal utilities |
-| `zerithdb-cli` | `npm install -g zerithdb-cli` | CLI tooling |
-| `zerithdb-react` | `npm install zerithdb-react` | React integration package |
-| `zerithdb-python` | `pip install zerithdb-python` | Python SDK support |
+| Package            | Installation                   | Description               |
+| ------------------ | ------------------------------ | ------------------------- |
+| `zerithdb-sdk`     | `npm install zerithdb-sdk`     | Main developer-facing SDK |
+| `zerithdb-db`      | `npm install zerithdb-db`      | IndexedDB adapter         |
+| `zerithdb-sync`    | `npm install zerithdb-sync`    | CRDT sync engine          |
+| `zerithdb-network` | `npm install zerithdb-network` | WebRTC networking layer   |
+| `zerithdb-auth`    | `npm install zerithdb-auth`    | Authentication utilities  |
+| `zerithdb-core`    | `npm install zerithdb-core`    | Shared internal utilities |
+| `zerithdb-cli`     | `npm install -g zerithdb-cli`  | CLI tooling               |
+| `zerithdb-react`   | `npm install zerithdb-react`   | React integration package |
+| `zerithdb-python`  | `pip install zerithdb-python`  | Python SDK support        |
 
 ---
 

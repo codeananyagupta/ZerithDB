@@ -2,7 +2,7 @@
 
 Thank you for your interest in ZerithDB! Every contribution — code, docs, tests, bug reports —
 matters enormously.
- 
+
 ---
 
 ## Code of Conduct
