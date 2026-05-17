@@ -122,6 +122,9 @@ const app = createApp({
   appId: "my-app-unique-id", // namespaces your local DB
   sync: {
     signalingUrl: "wss://signal.zerithdb.dev", // optional: use our hosted relay
+    ephemeral: {
+      throttleMs: 0, // immediate mute/speaker/stream metadata updates
+    },
     // or: signalingUrl: "ws://localhost:4000"  // self-hosted
   },
 });
@@ -151,6 +154,36 @@ backup.start();
 The backup adapter periodically exports the selected IndexedDB collections as a JSON snapshot and
 uploads it through a cloud target. ZerithDB includes Google Drive and Dropbox targets; applications
 remain responsible for obtaining the provider access token through their own OAuth flow.
+
+---
+
+### P2P Video Calls
+
+```typescript
+const app = createApp({
+  appId: "standup-room",
+  sync: { signalingUrl: "wss://signal.zerithdb.dev" },
+});
+
+await app.network.connect("standup-room");
+
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+app.video.publishStream(stream, { kind: "camera", label: "Ariyan camera" });
+
+app.video.setMuted("audio", true);
+app.video.setActiveSpeaker(app.network.peerId);
+
+app.video.on("stream:added", ({ peerId, stream }) => {
+  console.log("remote stream", peerId, stream);
+});
+
+app.video.on("participant:updated", (participant) => {
+  console.log(participant.muted, participant.streams, participant.activeSpeaker);
+});
+```
+
+Media travels over the existing WebRTC mesh. Mute status, active speaker, and stream metadata use
+ZerithDB ephemeral sync, so they are broadcast immediately and never persisted.
 
 ---
 
@@ -269,3 +302,5 @@ Good places to start:
 Apache 2.0 — see [LICENSE](LICENSE).
 
 Built with ❤️ by the ZerithDB community.
+
+Contributor: YASHODHA (GSSoC 2026)
