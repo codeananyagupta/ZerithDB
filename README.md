@@ -8,7 +8,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/Zerith-Labs/ZerithDB/actions/workflows/ci.yml/badge.svg)](https://github.com/Zerith-Labs/ZerithDB/actions/workflows/ci.yml)
-[![Status](https://img.shields.io/badge/status-alpha-orange.svg)](https://github.com/Zerith-Labs/ZerithDB)
+[![Status](https://img.shields.io/badge/status-alpha-orange.svg)]()
 [![Discord](https://img.shields.io/badge/Discord-Join%20Us-7289da?logo=discord&logoColor=white)](https://discord.gg/MhvuDvzWfF)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -17,22 +17,6 @@
 [**Discord**](https://discord.gg/MhvuDvzWfF) · [**Roadmap**](ROADMAP.md)
 
 </div>
-
-## Ecosystem
-
-ZerithDB provides multiple packages for building collaborative and offline-first applications.
-
-| Package            | Installation                   | Description               |
-| ------------------ | ------------------------------ | ------------------------- |
-| `zerithdb-sdk`     | `npm install zerithdb-sdk`     | Main developer-facing SDK |
-| `zerithdb-db`      | `npm install zerithdb-db`      | IndexedDB adapter         |
-| `zerithdb-sync`    | `npm install zerithdb-sync`    | CRDT sync engine          |
-| `zerithdb-network` | `npm install zerithdb-network` | WebRTC networking layer   |
-| `zerithdb-auth`    | `npm install zerithdb-auth`    | Authentication utilities  |
-| `zerithdb-core`    | `npm install zerithdb-core`    | Shared internal utilities |
-| `zerithdb-cli`     | `npm install -g zerithdb-cli`  | CLI tooling               |
-| `zerithdb-react`   | `npm install zerithdb-react`   | React integration package |
-| `zerithdb-python`  | `pip install zerithdb-python`  | Python SDK support        |
 
 ---
 
@@ -49,6 +33,22 @@ your users' browsers form a resilient, encrypted mesh network.
 
 > ZerithDB is in **alpha**. APIs will change. Feedback is our oxygen —
 > [open an issue](https://github.com/Zerith-Labs/ZerithDB/issues).
+
+---
+
+## Why ZerithDB?
+
+Traditional backend infrastructure is complex, expensive, and centralized. ZerithDB offers a
+different path:
+
+- **Infinite Scalability:** Your infrastructure scales with your users. Each new user adds computing
+  and storage power to the network.
+- **Zero Latency:** Data is read and written to a local database (IndexedDB) instantly. Sync happens
+  in the background.
+- **Privacy by Design:** Data is encrypted end-to-end. Since there's no central server, there's no
+  single point of failure or data breach.
+- **Development Speed:** Go from `npx zerithdb init` to a live, syncing app in minutes. Focus on
+  your UI, not your API.
 
 ---
 
@@ -94,11 +94,16 @@ That's it. No `.env` files. No `docker-compose.yml`. No cloud accounts.
 
 ### Option 1: CLI (Recommended)
 
-```bash
-npx zerithdb@latest init my-app
-cd my-app
-npm run dev
-```
+If you're new here, follow these beginner friendly steps to get ZerithDB running on your machine:
+
+| Step | Action              | Command                           | What it does                            |
+| ---- | ------------------- | --------------------------------- | --------------------------------------- |
+| 1    | **Initialize**      | `npx zerithdb@latest init my-app` | Creates your project folder.            |
+| 2    | **Go to Directory** | `cd my-app`                       | Enters the folder you just created.     |
+| 3    | **Install**         | `npm install`                     | Gets all the tools needed for the app.  |
+| 4    | **Start App**       | `npm run dev`                     | Launches the app in your local browser. |
+
+> **Note:** You need [Node.js](https://nodejs.org/) installed to run these commands!
 
 ### Option 2: Manual Install
 
@@ -122,31 +127,59 @@ const app = createApp({
 });
 ```
 
+### Local Cloud Backups
+
+```typescript
+import { createApp, GoogleDriveBackupTarget } from "zerithdb-sdk";
+
+const app = createApp({ appId: "my-app-unique-id" });
+
+const backup = app.backup(
+  new GoogleDriveBackupTarget({
+    accessToken: await getGoogleDriveAccessToken(),
+    folderId: "drive-folder-id",
+  }),
+  {
+    collections: ["todos", "settings"],
+    intervalMs: 30 * 60 * 1000,
+  }
+);
+
+backup.start();
+```
+
+The backup adapter periodically exports the selected IndexedDB collections as a JSON snapshot and
+uploads it through a cloud target. ZerithDB includes Google Drive and Dropbox targets; applications
+remain responsible for obtaining the provider access token through their own OAuth flow.
+
 ---
 
 ## Architecture in One Diagram
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                      Your Browser                        │
-│                                                          │
-│  ┌──────────┐   ┌──────────┐   ┌──────────────────────┐ │
-│  │ ZerithDB │   │   Sync   │   │   P2P Network Layer  │ │
-│  │   SDK    │──▶│  Engine  │──▶│  (WebRTC mesh)       │ │
-│  └──────────┘   │  (CRDT)  │   └──────────────────────┘ │
-│       │         └──────────┘            │               │
-│       ▼              │                  │               │
-│  ┌──────────┐        │          ┌───────▼──────┐        │
-│  │ Local DB │◀───────┘          │  Signaling   │        │
-│  │(IndexedDB│                   │  Server      │        │
-│  └──────────┘                   │  (WS relay)  │        │
-└──────────────────────────────── └──────────────┘ ───────┘
-                                         ▲
-                        Only for initial │ peer discovery
-                                         │
-                             ┌───────────┴──────────┐
-                             │   Other Peer Browser  │
-                             └──────────────────────┘
+```mermaid
+flowchart TB
+  subgraph browser["Your Browser"]
+    direction LR
+    SDK["ZerithDB SDK"]
+    SYNC["Sync Engine\n(CRDT)"]
+    P2P["P2P Network Layer\n(WebRTC mesh)"]
+    SDK -->|writes| SYNC
+    SYNC -->|broadcast| P2P
+  end
+
+  subgraph storage["Local Storage"]
+    DB["Local DB\n(IndexedDB)"]
+  end
+
+  SDK -->|persist| DB
+  SYNC -->|flush| DB
+
+  SIG["Signaling Server\n(WS relay)"]
+  PEER["Other Peer Browser"]
+
+  P2P -->|handshake only| SIG
+  SIG -->|peer discovery| PEER
+  P2P <-.->|"direct P2P\n(after handshake)"| PEER
 ```
 
 The signaling server **never sees your data**. It only brokers the initial WebRTC handshake. After
@@ -236,4 +269,3 @@ Good places to start:
 Apache 2.0 — see [LICENSE](LICENSE).
 
 Built with ❤️ by the ZerithDB community.
-
