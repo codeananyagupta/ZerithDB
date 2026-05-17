@@ -3,6 +3,10 @@ import { program } from "commander";
 import chalk from "chalk";
 import { initCommand } from "./commands/init.js";
 import { signalCommand } from "./commands/signal.js";
+import { lintCommand } from "./commands/lint.js";
+import { formatCommand } from "./commands/format.js";
+import { maintenanceCommand } from "./commands/maintenance.js";
+import { checkConnectivity } from "./checkConnectivity.js";
 
 const VERSION = "0.1.0";
 
@@ -36,4 +40,44 @@ program
   .option("-p, --port <port>", "Port to listen on", "4000")
   .action(signalCommand);
 
+program
+  .command("lint [schema-path]")
+  .description("Lint the db schema for anti-patterns and missing indexes")
+  .action(lintCommand);
+
+program
+  .command("format [schema-path]")
+  .description("Format the db schema using Prettier")
+  .action(formatCommand);
+
 program.parse(process.argv);
+async function main() {
+  await checkConnectivity();
+
+  program
+    .name("zerithdb")
+    .description("ZerithDB CLI — scaffold and manage local-first P2P apps")
+    .version(VERSION);
+
+  program
+    .command("init [app-name]")
+    .description("Scaffold a new ZerithDB application")
+    .option("-t, --template <template>", "Starter template", "todo")
+    .option("--no-install", "Skip dependency installation")
+    .action(initCommand);
+
+  program
+    .command("maintenance <status>")
+    .description("Toggle maintenance mode for the signaling server (on/off)")
+    .action(maintenanceCommand);
+
+  program
+    .command("signal")
+    .description("Start a local WebSocket signaling server for development")
+    .option("-p, --port <port>", "Port to listen on", "4000")
+    .action(signalCommand);
+
+  program.parse(process.argv);
+}
+
+main();

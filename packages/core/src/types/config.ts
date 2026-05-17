@@ -6,6 +6,13 @@ export interface SyncConfig {
   signalingUrl?: string;
 
   /**
+   * Multiple signaling server URLs for automatic failover.
+   * Tried in order — falls back to the next on failure.
+   * Takes priority over signalingUrl if both are set.
+   */
+  signalingUrls?: string[];
+
+  /**
    * STUN/TURN server URLs for WebRTC ICE negotiation.
    * @default Uses Google's public STUN servers
    */
@@ -17,6 +24,26 @@ export interface SyncConfig {
    * @default 10
    */
   maxPeers?: number;
+
+  /**
+   * Signaling transport preference.
+   * - `"auto"`      — Try WebSocket first, fall back to HTTP long-polling (default)
+   * - `"websocket"` — WebSocket only (original behavior)
+   * - `"polling"`   — HTTP long-polling only (for strict firewall environments)
+   * @default "auto"
+   */
+  transport?: "auto" | "websocket" | "polling";
+
+  /**
+   * Configuration options for low-latency ephemeral sync state.
+   */
+  ephemeral?: EphemeralConfig;
+}
+
+export interface EphemeralConfig {
+  cleanupIntervalMs?: number;
+  throttleMs?: number;
+  staleAfterMs?: number;
 }
 
 export interface AuthConfig {
@@ -25,6 +52,15 @@ export interface AuthConfig {
    * @default "__zerithdb_identity"
    */
   storageKey?: string;
+}
+
+export interface DebugConfig {
+  /**
+   * Enable the DevTools memory collector — samples IndexedDB and WebRTC
+   * buffer usage and broadcasts snapshots for the ZerithDB DevTools extension.
+   * @default false
+   */
+  devtools?: boolean;
 }
 
 export interface NetworkConfig {
@@ -39,6 +75,11 @@ export interface NetworkConfig {
    * @default 1000
    */
   reconnectDelay?: number;
+  /** Optional human-readable peer alias */
+  name?: string;
+
+  /** Optional ENS identity */
+  ens?: string;
 }
 
 export interface ZerithDBConfig {
@@ -52,6 +93,7 @@ export interface ZerithDBConfig {
   sync?: SyncConfig;
   auth?: AuthConfig;
   network?: NetworkConfig;
+  debug?: DebugConfig;
 
   /**
    * Log level for internal ZerithDB diagnostics.
